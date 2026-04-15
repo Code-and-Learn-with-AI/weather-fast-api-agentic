@@ -1,0 +1,7 @@
+[project]
+name = "weather-fast-api-agentic"
+version = "0.1.0"
+description = "Weather query API — FastAPI backend, Streamlit frontend, Postgres + Redis."
+authors = [{ name = "Ayoub Massoudi", email = "ayoub.massoudi@gmail.com" }]
+requires-python = ">=3.13"
+dependencies = []
