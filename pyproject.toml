@@ -5,6 +5,7 @@ description = "Weather query API — FastAPI backend, Streamlit frontend, Postgr
 authors = [{ name = "Ayoub Massoudi", email = "ayoub.massoudi@gmail.com" }]
 requires-python = ">=3.13"
 dependencies = [
+    "fastapi>=0.135.3",
     "pydantic>=2.13.1",
     "pydantic-settings>=2.13.1",
 ]

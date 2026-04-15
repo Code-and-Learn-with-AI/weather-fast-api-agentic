@@ -50,7 +50,7 @@ def test_missing_redis_url_raises() -> None:
 @pytest.mark.parametrize("level", ["DEBUG", "WARNING", "ERROR", "CRITICAL"])
 def test_log_level_accepts_valid_values(level: str) -> None:
     settings = Settings.model_validate(make_env(LOG_LEVEL=level))
-    assert settings.LOG_LEVEL == level
+    assert level == settings.LOG_LEVEL
 
 
 def test_log_level_rejects_invalid_value() -> None:
