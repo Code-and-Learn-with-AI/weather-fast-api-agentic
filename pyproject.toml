@@ -5,3 +5,33 @@ description = "Weather query API — FastAPI backend, Streamlit frontend, Postgr
 authors = [{ name = "Ayoub Massoudi", email = "ayoub.massoudi@gmail.com" }]
 requires-python = ">=3.13"
 dependencies = []
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pyright>=1.1.408",
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+    "ruff>=0.15.10",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.pyright]
+pythonVersion = "3.13"
+typeCheckingMode = "strict"
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
