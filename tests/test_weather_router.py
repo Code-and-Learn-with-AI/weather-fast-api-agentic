@@ -39,6 +39,7 @@ async def test_get_weather_city_not_found_returns_404(
     )
     response = await async_client.get("/weather", params={"city": "Nowhere"})
     assert response.status_code == 404
+    assert "Nowhere" in response.json()["detail"]
 
 
 async def test_get_weather_upstream_error_returns_502(
@@ -50,3 +51,4 @@ async def test_get_weather_upstream_error_returns_502(
     )
     response = await async_client.get("/weather", params={"city": "Paris"})
     assert response.status_code == 502
+    assert "upstream failure" in response.json()["detail"]
