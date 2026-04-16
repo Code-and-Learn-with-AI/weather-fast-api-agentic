@@ -58,10 +58,11 @@ _TBD — populated in Phase 3._
 
 See `.claude/project.md` for the authoritative rules. Summary:
 1. Derive tests from acceptance criteria.
-2. Propose tests; wait for review.
-3. Implement minimal code.
-4. User runs tests and pastes output.
-5. Iterate to green; refactor after green.
+2. Always use conftest.py to put common, shared reusable fixtures.
+3. Propose tests; wait for review.
+4. Implement minimal code.
+5. User runs tests and pastes output.
+6. Iterate to green; refactor after green.
 
 ## 6. Agent responsibilities
 

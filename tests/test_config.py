@@ -26,25 +26,22 @@ def test_log_level_defaults_to_info() -> None:
     assert settings.LOG_LEVEL == "INFO"
 
 
-def test_missing_openweather_api_key_raises() -> None:
-    env = make_env()
-    del env["OPENWEATHER_API_KEY"]
+def test_missing_openweather_api_key_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("OPENWEATHER_API_KEY")
     with pytest.raises(ValidationError):
-        Settings.model_validate(env)
+        Settings(_env_file=None)  # type: ignore[call-arg]
 
 
-def test_missing_database_url_raises() -> None:
-    env = make_env()
-    del env["DATABASE_URL"]
+def test_missing_database_url_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("DATABASE_URL")
     with pytest.raises(ValidationError):
-        Settings.model_validate(env)
+        Settings(_env_file=None)  # type: ignore[call-arg]
 
 
-def test_missing_redis_url_raises() -> None:
-    env = make_env()
-    del env["REDIS_URL"]
+def test_missing_redis_url_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("REDIS_URL")
     with pytest.raises(ValidationError):
-        Settings.model_validate(env)
+        Settings(_env_file=None)  # type: ignore[call-arg]
 
 
 @pytest.mark.parametrize("level", ["DEBUG", "WARNING", "ERROR", "CRITICAL"])
