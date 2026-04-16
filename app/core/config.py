@@ -8,5 +8,6 @@ class Settings(BaseSettings):
 
     OPENWEATHER_API_KEY: str
     DATABASE_URL: str
+    DATABASE_TEST_URL: str
     REDIS_URL: str
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
