@@ -5,8 +5,10 @@ from collections.abc import AsyncGenerator
 
 import pytest
 from httpx import ASGITransport, AsyncClient
+from pytest_mock import MockerFixture
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 
+from app.core.database import get_db_session
 from app.main import app
 from app.models.base import Base
 
@@ -28,9 +30,14 @@ def set_test_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-async def async_client() -> AsyncGenerator[AsyncClient]:
+async def async_client(mocker: MockerFixture) -> AsyncGenerator[AsyncClient]:
+    async def _mock_db_session() -> AsyncGenerator[mocker.MagicMock]:  # type: ignore[name-defined]
+        yield mocker.MagicMock()
+
+    app.dependency_overrides[get_db_session] = _mock_db_session
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         yield client
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture(scope="session")

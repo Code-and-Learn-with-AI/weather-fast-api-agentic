@@ -27,6 +27,15 @@ async def test_get_weather_returns_weather_response(mocker: MockerFixture) -> No
     assert result == WEATHER_RESPONSE
 
 
+async def test_get_weather_saves_to_repo(mocker: MockerFixture) -> None:
+    mocker.patch("app.services.weather_service.get_current_weather", return_value=WEATHER_RESPONSE)
+    mock_repo = mocker.AsyncMock()
+    service = WeatherService(client=mocker.AsyncMock(spec=httpx.AsyncClient), api_key="test-key", repo=mock_repo)
+    result = await service.get_weather("Paris")
+    mock_repo.save.assert_called_once_with(WEATHER_RESPONSE)
+    assert result == WEATHER_RESPONSE
+
+
 async def test_get_weather_propagates_city_not_found_error(mocker: MockerFixture) -> None:
     mocker.patch(
         "app.services.weather_service.get_current_weather",
