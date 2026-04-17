@@ -1,20 +1,3 @@
-# weather-fast-api-agentic
-
-Production-style weather app: FastAPI backend + Streamlit frontend, backed by Postgres and Redis, built TDD-first.
-
-See [`Claude.md`](./Claude.md) for architecture, conventions, and workflow.
-See [`.claude/plan/build-roadmap.md`](./.claude/plan/build-roadmap.md) for the incremental build plan.
-
-## Status
-
-Phases 1–7 complete: FastAPI backend, Postgres + Redis persistence, Streamlit UI, full Docker Compose stack.
-
-## Agentic architecture
-
-The project uses Claude Code's MCP, commands, skills, and agents to automate the full development workflow — from a ClickUp ticket to a reviewed pull request.
-
-### End-to-end flow
-
   ---                                                                                                                               
   Overview — the end-to-end flow          
                                                                                                                                     
@@ -61,12 +44,7 @@ The project uses Claude Code's MCP, commands, skills, and agents to automate the
   Why MCP and not a command/skill: skills and commands only work with text you provide. MCP gives Claude live tool access to        
   external systems — it can fetch the ticket itself.
                                                                                                                                     
-  Setup: the ClickUp MCP server is registered at project scope via:
-
-    claude mcp add --transport http --scope project clickup https://mcp.clickup.com/mcp
-
-  This command created .mcp.json at the project root. Authentication is handled by the MCP server
-  (OAuth via browser). No API key needs to be stored manually.                                                  
+  Setup needed: configure the ClickUp MCP server in .mcp.json in the project root.                                                  
    
   ---                                                                                                                               
   Commands (3)    
