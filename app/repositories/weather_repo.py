@@ -1,5 +1,6 @@
 from datetime import UTC, datetime
 
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.weather_query import WeatherQuery
@@ -9,6 +10,22 @@ from app.schemas.weather import WeatherResponse
 class WeatherRepo:
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
+
+    async def get_cities_cloud(self, from_dt: datetime, to_dt: datetime) -> dict[str, int]:
+        result = await self._session.execute(
+            select(WeatherQuery.city, func.count(WeatherQuery.id).label("hits"))
+            .where(WeatherQuery.queried_at >= from_dt, WeatherQuery.queried_at <= to_dt)
+            .group_by(WeatherQuery.city)
+        )
+        return {str(row.city): int(row.hits) for row in result}
+
+    async def get_cities_dots(self, from_dt: datetime, to_dt: datetime) -> list[WeatherQuery]:
+        result = await self._session.execute(
+            select(WeatherQuery)
+            .where(WeatherQuery.queried_at >= from_dt, WeatherQuery.queried_at <= to_dt)
+            .order_by(WeatherQuery.queried_at)
+        )
+        return list(result.scalars().all())
 
     async def save(self, response: WeatherResponse) -> WeatherQuery:
         record = WeatherQuery(

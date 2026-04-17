@@ -3,7 +3,7 @@ import uuid
 from fastapi import FastAPI, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
-from app.routers import weather
+from app.routers import cities_hits, weather
 
 app = FastAPI(
     title="Weather FastAPI",
@@ -23,6 +23,7 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
 app.add_middleware(RequestIDMiddleware)
 
 app.include_router(weather.router)
+app.include_router(cities_hits.router)
 
 
 @app.get("/health")
