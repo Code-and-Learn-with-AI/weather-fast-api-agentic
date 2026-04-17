@@ -21,6 +21,8 @@ if st.button("Get Weather") and city.strip():
                 col2.metric("Feels like", f"{data['feels_like']}°C")
                 col3.metric("Humidity", f"{data['humidity']}%")
                 st.caption(data["description"].capitalize())
+                source_label = "Data retrieved from cache." if data["source"] == "cache" else "Data retrieved from API."
+                st.info(source_label)
             elif response.status_code == 404:
                 st.error(response.json().get("detail", "City not found."))
             else:
