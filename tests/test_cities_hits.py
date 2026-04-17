@@ -92,3 +92,13 @@ async def test_cities_dots_entry_has_datetime_and_city_fields(db_async_client: A
     assert len(dots) >= 1
     assert "datetime" in dots[0]
     assert "city" in dots[0]
+
+
+# 422 test for invalid DateRangeRequest
+async def test_cities_cloud_returns_422_for_invalid_date_range(db_async_client: AsyncClient) -> None:
+    payload = {
+        "from": "invalid",
+        "to": "invalid",
+    }
+    response = await db_async_client.post("/cities-cloud", json=payload)
+    assert response.status_code == 422

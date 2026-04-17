@@ -48,4 +48,13 @@ def test_humidity_above_100_raises() -> None:
 def test_schema_serializes_to_dict() -> None:
     weather = WeatherResponse.model_validate(make_payload())
     data = weather.model_dump()
-    assert set(data.keys()) == {"city", "country", "temperature", "feels_like", "humidity", "description", "icon"}
+    assert set(data.keys()) == {
+        "city",
+        "country",
+        "temperature",
+        "feels_like",
+        "humidity",
+        "description",
+        "icon",
+        "source",
+    }

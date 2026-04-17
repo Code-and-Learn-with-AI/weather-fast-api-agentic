@@ -47,48 +47,49 @@ with tab_hits:
         "to": now.isoformat(),
     }
 
-    try:
-        cloud_resp = httpx.post(f"{API_BASE_URL}/cities-cloud", json=payload, timeout=10)
-        dots_resp = httpx.post(f"{API_BASE_URL}/cities-dots", json=payload, timeout=10)
+    with st.spinner("Loading analytics..."):
+        try:
+            cloud_resp = httpx.post(f"{API_BASE_URL}/cities-cloud", json=payload, timeout=10)
+            dots_resp = httpx.post(f"{API_BASE_URL}/cities-dots", json=payload, timeout=10)
 
-        if cloud_resp.status_code == 200:
-            cloud_data = cloud_resp.json()
-            city_hits = {entry["city"]: entry["hits"] for entry in cloud_data["cities"]}
+            if cloud_resp.status_code == 200:
+                cloud_data = cloud_resp.json()
+                city_hits = {entry["city"]: entry["hits"] for entry in cloud_data["cities"]}
 
-            if city_hits:
-                st.subheader("Cities cloud")
-                wc = WordCloud(width=800, height=400, background_color="white").generate_from_frequencies(city_hits)
-                st.image(wc.to_array())
-            else:
-                st.info("No weather queries in the last 24h.")
+                if city_hits:
+                    st.subheader("Cities cloud")
+                    wc = WordCloud(width=800, height=400, background_color="white").generate_from_frequencies(city_hits)  # type: ignore[reportUnknownMemberType]
+                    st.image(wc.to_array())  # type: ignore[reportUnknownMemberType]
+                else:
+                    st.info("No weather queries in the last 24h.")
 
-        if dots_resp.status_code == 200:
-            dots_data = dots_resp.json()["dots"]
+            if dots_resp.status_code == 200:
+                dots_data = dots_resp.json()["dots"]
 
-            if dots_data:
-                st.subheader("Queries — last 24h")
-                cities_seen = sorted({d["city"] for d in dots_data})
-                color_map = {c: f"hsl({i * 360 // len(cities_seen)}, 70%, 50%)" for i, c in enumerate(cities_seen)}
+                if dots_data:
+                    st.subheader("Queries — last 24h")
+                    cities_seen = sorted({d["city"] for d in dots_data})
+                    color_map = {c: f"hsl({i * 360 // len(cities_seen)}, 70%, 50%)" for i, c in enumerate(cities_seen)}
 
-                fig = go.Figure()
-                for city_name in cities_seen:
-                    city_dots = [d for d in dots_data if d["city"] == city_name]
-                    fig.add_trace(go.Scatter(
-                        x=[d["datetime"] for d in city_dots],
-                        y=[city_name] * len(city_dots),
-                        mode="markers",
-                        marker={"size": 12, "color": color_map[city_name]},
-                        name=city_name,
-                        hovertemplate="%{x}<br>%{y}<extra></extra>",
-                    ))
+                    fig = go.Figure()  # type: ignore[reportUnknownMemberType]
+                    for city_name in cities_seen:
+                        city_dots = [d for d in dots_data if d["city"] == city_name]
+                        fig.add_trace(go.Scatter(  # type: ignore[reportUnknownMemberType]
+                            x=[d["datetime"] for d in city_dots],
+                            y=[city_name] * len(city_dots),
+                            mode="markers",
+                            marker={"size": 12, "color": color_map[city_name]},
+                            name=city_name,
+                            hovertemplate="%{x}<br>%{y}<extra></extra>",
+                        ))
 
-                fig.update_layout(
-                    xaxis_title="Time",
-                    yaxis_title="City",
-                    showlegend=True,
-                    height=400,
-                )
-                st.plotly_chart(fig, use_container_width=True)
+                    fig.update_layout(  # type: ignore[reportUnknownMemberType]
+                        xaxis_title="Time",
+                        yaxis_title="City",
+                        showlegend=True,
+                        height=400,
+                    )
+                    st.plotly_chart(fig, use_container_width=True)  # type: ignore[reportUnknownMemberType]
 
-    except httpx.RequestError:
-        st.error("Could not reach the API. Is it running?")
+        except httpx.RequestError:
+            st.error("Could not reach the API. Is it running?")

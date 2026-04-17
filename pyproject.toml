@@ -9,7 +9,6 @@ dependencies = [
     "asyncpg>=0.31.0",
     "fastapi>=0.135.3",
     "httpx>=0.28.1",
-    "matplotlib>=3.10.8",
     "plotly>=6.7.0",
     "pydantic>=2.13.1",
     "pydantic-settings>=2.13.1",

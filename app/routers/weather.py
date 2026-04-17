@@ -3,11 +3,9 @@ from collections.abc import AsyncGenerator
 import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from redis.asyncio import Redis
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings
-from app.core.database import get_db_session
-from app.repositories.weather_repo import WeatherRepo
+from app.repositories.weather_repo import WeatherRepo, get_weather_repo
 from app.schemas.weather import WeatherResponse
 from app.services.cache import WeatherCache
 from app.services.exceptions import CityNotFoundError, WeatherServiceError
@@ -18,10 +16,6 @@ router = APIRouter()
 
 def get_settings() -> Settings:
     return Settings()  # type: ignore[call-arg]
-
-
-def get_weather_repo(session: AsyncSession = Depends(get_db_session)) -> WeatherRepo:
-    return WeatherRepo(session)
 
 
 async def get_redis(settings: Settings = Depends(get_settings)) -> AsyncGenerator[Redis]:  # type: ignore[type-arg]

@@ -42,7 +42,7 @@ async def test_get_weather_returns_cached_response(mocker: MockerFixture) -> Non
     service = WeatherService(client=mocker.AsyncMock(spec=httpx.AsyncClient), api_key="test-key", cache=mock_cache)
     result = await service.get_weather("Paris")
     mock_cache.get.assert_called_once_with("Paris")
-    assert result == WEATHER_RESPONSE
+    assert result == WEATHER_RESPONSE.model_copy(update={"source": "cache"})
 
 
 async def test_get_weather_cache_miss_calls_openweather_and_sets_cache(mocker: MockerFixture) -> None:
@@ -52,7 +52,7 @@ async def test_get_weather_cache_miss_calls_openweather_and_sets_cache(mocker: M
     service = WeatherService(client=mocker.AsyncMock(spec=httpx.AsyncClient), api_key="test-key", cache=mock_cache)
     result = await service.get_weather("Paris")
     mock_cache.set.assert_called_once_with("Paris", WEATHER_RESPONSE)
-    assert result == WEATHER_RESPONSE
+    assert result == WEATHER_RESPONSE.model_copy(update={"source": "api"})
 
 
 async def test_get_weather_propagates_city_not_found_error(mocker: MockerFixture) -> None:
