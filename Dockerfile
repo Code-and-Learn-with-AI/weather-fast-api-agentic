@@ -7,9 +7,10 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
 
 FROM base AS runtime
-RUN adduser --disabled-password --no-create-home appuser
+RUN adduser --disabled-password --gecos "" appuser
 COPY --from=builder /app/.venv .venv
 COPY app/ app/
+COPY ui/ ui/
 COPY alembic/ alembic/
 COPY alembic.ini .
 ENV PATH="/app/.venv/bin:$PATH"

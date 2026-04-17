@@ -67,5 +67,16 @@ services:
       migrate:
         condition: service_completed_successfully
 
+  streamlit:
+    build: .
+    container_name: weather-streamlit
+    command: streamlit run ui/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      API_BASE_URL: http://api:8000
+    depends_on:
+      - api
+
 volumes:
   postgres_data:
