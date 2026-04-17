@@ -25,7 +25,7 @@ def get_weather_repo(session: AsyncSession = Depends(get_db_session)) -> Weather
 
 
 async def get_redis(settings: Settings = Depends(get_settings)) -> AsyncGenerator[Redis]:  # type: ignore[type-arg]
-    async with Redis.from_url(settings.REDIS_URL) as client:
+    async with Redis.from_url(settings.REDIS_URL) as client:  # type: ignore[reportUnknownMemberType]
         yield client
 
 

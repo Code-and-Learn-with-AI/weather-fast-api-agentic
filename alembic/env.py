@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -6,14 +7,15 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
-from app.core.config import Settings
+from app.models import (
+    weather_query as _weather_query,  # noqa: F401 # pyright: ignore[reportUnusedImport] — registers WeatherQuery on Base.metadata
+)
 from app.models.base import Base
-from app.models import weather_query as _weather_query  # noqa: F401 — registers WeatherQuery on Base.metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option("sqlalchemy.url", Settings().DATABASE_URL)  # type: ignore[call-arg]
+config.set_main_option("sqlalchemy.url", os.environ["DATABASE_URL"])
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

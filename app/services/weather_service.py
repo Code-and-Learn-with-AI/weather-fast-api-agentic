@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 import httpx
 
 from app.schemas.weather import WeatherResponse
 from app.services.openweather import get_current_weather
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from app.repositories.weather_repo import WeatherRepo
@@ -29,6 +32,7 @@ class WeatherService:
         if self._cache is not None:
             cached = await self._cache.get(city)
             if cached is not None:
+                logger.info("Weather fetched from cache for city: %s", city)
                 return cached
         response = await get_current_weather(city=city, api_key=self._api_key, client=self._client)
         if self._cache is not None:

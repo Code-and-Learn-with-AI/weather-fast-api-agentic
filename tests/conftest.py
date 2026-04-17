@@ -19,7 +19,8 @@ def set_session_env() -> None:
     """Set env vars required by session-scoped fixtures (e.g. db_engine)."""
     from app.core.config import Settings
     settings = Settings()  # type: ignore[call-arg]
-    os.environ["DATABASE_TEST_URL"] = settings.DATABASE_TEST_URL  # type: ignore[assignment]
+    if settings.DATABASE_TEST_URL is not None:
+        os.environ["DATABASE_TEST_URL"] = settings.DATABASE_TEST_URL
 
 
 @pytest.fixture(autouse=True)

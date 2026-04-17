@@ -1,3 +1,5 @@
+from collections.abc import AsyncGenerator
+
 import pytest
 from fakeredis.aioredis import FakeRedis
 
@@ -16,7 +18,7 @@ WEATHER_RESPONSE = WeatherResponse(
 
 
 @pytest.fixture
-async def fake_redis() -> FakeRedis:
+async def fake_redis() -> AsyncGenerator[FakeRedis]:
     async with FakeRedis() as fake_redis_client:
         yield fake_redis_client
 
