@@ -46,6 +46,21 @@ async def async_client(mocker: MockerFixture) -> AsyncGenerator[AsyncClient]:
     app.dependency_overrides.clear()
 
 
+@pytest.fixture
+async def db_async_client(db_session: AsyncSession, mocker: MockerFixture) -> AsyncGenerator[AsyncClient]:
+    async def _override_db_session() -> AsyncGenerator[AsyncSession]:
+        yield db_session
+
+    async def _mock_redis() -> AsyncGenerator[mocker.MagicMock]:  # type: ignore[name-defined]
+        yield mocker.MagicMock()
+
+    app.dependency_overrides[get_db_session] = _override_db_session
+    app.dependency_overrides[get_redis] = _mock_redis
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        yield client
+    app.dependency_overrides.clear()
+
+
 @pytest.fixture(scope="session")
 async def db_engine() -> AsyncGenerator[AsyncEngine]:
     engine = create_async_engine(os.environ["DATABASE_TEST_URL"])
