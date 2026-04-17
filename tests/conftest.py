@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engin
 from app.core.database import get_db_session
 from app.main import app
 from app.models.base import Base
+from app.routers.weather import get_redis
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -34,7 +35,11 @@ async def async_client(mocker: MockerFixture) -> AsyncGenerator[AsyncClient]:
     async def _mock_db_session() -> AsyncGenerator[mocker.MagicMock]:  # type: ignore[name-defined]
         yield mocker.MagicMock()
 
+    async def _mock_redis() -> AsyncGenerator[mocker.MagicMock]:  # type: ignore[name-defined]
+        yield mocker.MagicMock()
+
     app.dependency_overrides[get_db_session] = _mock_db_session
+    app.dependency_overrides[get_redis] = _mock_redis
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         yield client
     app.dependency_overrides.clear()
