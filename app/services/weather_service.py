@@ -33,8 +33,9 @@ class WeatherService:
             cached = await self._cache.get(city)
             if cached is not None:
                 logger.info("Weather fetched from cache for city: %s", city)
-                return cached
+                return cached.model_copy(update={"source": "cache"})
         response = await get_current_weather(city=city, api_key=self._api_key, client=self._client)
+        response = response.model_copy(update={"source": "api"})
         if self._cache is not None:
             await self._cache.set(city, response)
         if self._repo is not None:

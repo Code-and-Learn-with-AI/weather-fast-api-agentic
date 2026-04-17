@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -9,3 +11,4 @@ class WeatherResponse(BaseModel):
     humidity: int = Field(ge=0, le=100)
     description: str
     icon: str
+    source: Literal["cache", "api"] = "api"
