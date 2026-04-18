@@ -18,6 +18,7 @@ from app.routers.weather import get_redis
 def set_session_env() -> None:
     """Set env vars required by session-scoped fixtures (e.g. db_engine)."""
     from app.core.config import Settings
+
     settings = Settings()  # type: ignore[call-arg]
     if settings.DATABASE_TEST_URL is not None:
         os.environ["DATABASE_TEST_URL"] = settings.DATABASE_TEST_URL
@@ -79,4 +80,4 @@ async def db_session(db_engine: AsyncEngine) -> AsyncGenerator[AsyncSession]:
         session = AsyncSession(bind=conn, expire_on_commit=False)
         yield session
         await session.close()
-        await conn.rollback()
+        await conn.rollback()  # rollback the transaction to avoid polluting the next test

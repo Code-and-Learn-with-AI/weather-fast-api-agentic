@@ -46,5 +46,5 @@ class WeatherRepo:
         )
         self._session.add(record)
         await self._session.commit()
-        await self._session.refresh(record)
+        await self._session.refresh(record)  # refresh the record to get the latest version
         return record
